@@ -10,6 +10,7 @@ import { User, Lock, Mail, Eye, EyeOff } from "lucide-react";
 
 import { apiClient } from "@/lib/api-client";
 import { SIGNUP_ROUTE } from "@/utils/constant";
+import toast from "react-hot-toast";
 
 export function Signup() {
   const [name, setName] = useState("");
@@ -28,8 +29,12 @@ export function Signup() {
       });
 
       console.log("Signup successful:", response.data);
+      if(response.status === 201){
+        toast.success("Signup successful");
+      }
     } catch (error) {
       console.error("Signup failed:", error);
+      toast.error(error.response.data.message);
     }
   };
   return (

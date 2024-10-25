@@ -12,6 +12,7 @@ import Login from "./components/login-page";
 import Signup from "./components/signup";
 import NotFound from "./components/Notfound";
 import { Toaster } from "react-hot-toast";
+import { AdminRoute, PrivateRoute } from "./utils/authenticator";
 
 function App() {
   return (
@@ -20,15 +21,64 @@ function App() {
 
       <Router>
         <Routes>
-          <Route path="/signup" element={<Signup />} />
+          <Route
+            path="/signup"
+            element={
+              <AdminRoute>
+                <Signup />
+              </AdminRoute>
+            }
+          />
           <Route path="/login" element={<Login />} />
-          <Route path="/" element={<TransportDashboardComponent />} />
-          <Route path="/ship" element={<ShipmentDashboardComponent />} />
+          <Route
+            path="/"
+            element={
+              <AdminRoute>
+                <TransportDashboardComponent />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/ship"
+            element={
+              <PrivateRoute>
+                <ShipmentDashboardComponent />
+              </PrivateRoute>
+            }
+          />
 
-          <Route path="/truck-info" element={<TruckDashboard />} />
-          <Route path="/driver" element={<DriverManagementComponent />} />
-          <Route path="/client" element={<EnhancedClientManagement />} />
-          <Route path="/billing" element={<EnhancedBillingPageComponent />} />
+          <Route
+            path="/truck-info"
+            element={
+              <PrivateRoute>
+                <TruckDashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/driver"
+            element={
+              <PrivateRoute>
+                <DriverManagementComponent />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/client"
+            element={
+              <PrivateRoute>
+                <EnhancedClientManagement />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/billing"
+            element={
+              <PrivateRoute>
+                <EnhancedBillingPageComponent />
+              </PrivateRoute>
+            }
+          />
 
           <Route path="/*" element={<NotFound />} />
         </Routes>

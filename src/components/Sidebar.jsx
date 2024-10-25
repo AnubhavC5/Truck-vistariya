@@ -3,7 +3,8 @@ import { BarChart, Package, Truck, LifeBuoy, CalendarArrowDown, UsersRound, Rece
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import Clock from "./Clock";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import useAuthStore from "@/zustand/store";
 
 const NavItem = ({ to, icon, text, active = false }) => {
   return (
@@ -22,18 +23,24 @@ const NavItem = ({ to, icon, text, active = false }) => {
 
 const SidebarContent = ({ isLoggedIn, handleLogin, handleLogout }) => {
   const param = window.location.pathname;
+  const [isAdmin, setisAdmin] = useState(false);
   const highlight = param.split("/").pop();
+  const role=useAuthStore((state) => state?.user?.role);
+  if(role==="admin"){
+ setisAdmin(true);    
+  }
+
 
   return (
     <>
       <h1 className="text-3xl font-bold mb-10 text-center text-indigo-500">TMS Admin</h1>
       <nav className="space-y-3">
-        <NavItem
+        {isAdmin &&(<NavItem
           to="/"
           icon={<Package className="h-6 w-6" />}
           text="Dashboard"
           active={highlight === ""}
-        />
+        />)}
         <NavItem
           to="/truck-info"
           icon={<Truck className="h-6 w-6" />}
@@ -64,13 +71,19 @@ const SidebarContent = ({ isLoggedIn, handleLogin, handleLogout }) => {
           text="Billing"
           active={highlight === "billing"}
         />
+        {isAdmin && <NavItem
+          to="/signup"
+          icon={<ReceiptIndianRupee className="h-6 w-6" />}
+          text="signup"
+          active={highlight === "signup"}
+        />}
       </nav>
 
       <Clock />
 
       {/* Conditional Rendering for Login/Logout */}
       <div className="mt-10 flex flex-col space-y-3">
-        {isLoggedIn ? (
+        
           <button
             onClick={handleLogout}
             className="flex items-center justify-center w-full p-3 text-lg font-medium text-gray-400 bg-gray-700 rounded-lg hover:bg-red-600 hover:text-white transition-colors duration-200"
@@ -78,15 +91,7 @@ const SidebarContent = ({ isLoggedIn, handleLogin, handleLogout }) => {
             <LogOut className="mr-2 h-5 w-5" />
             Signout
           </button>
-        ) : (
-          <button
-            onClick={handleLogin}
-            className="flex items-center justify-center w-full p-3 text-lg font-medium text-indigo-500 bg-gray-900 rounded-lg hover:bg-indigo-600 hover:text-white transition-colors duration-200"
-          >
-            <LogIn className="mr-2 h-5 w-5" />
-            Login
-          </button>
-        )}
+        
       </div>
     </>
   );
@@ -94,7 +99,9 @@ const SidebarContent = ({ isLoggedIn, handleLogin, handleLogout }) => {
 
 export const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const  logout  = useAuthStore((state)=>state.logout);
 
+ const navigate = useNavigate();
   const handleLogin = () => {
     // Logic to handle login
     setIsLoggedIn(true); // Set to true once login is successful
@@ -102,6 +109,8 @@ export const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
 
   const handleLogout = () => {
     // Logic to handle logout
+    logout();
+    navigate("/");
     setIsLoggedIn(false); // Set to false once logout is successful
   };
 
