@@ -24,6 +24,6 @@ const AdminRoute = ({ children }) => {
 
   console.log("User role (AdminRoute):", userRole);
 
-  return userRole === "admin" ? children : <Navigate to="/login" />;
+  return userRole === "admin" ? children : <Navigate to="/truck-info" />;
 };
 export { PrivateRoute, PublicRoute, AdminRoute };
