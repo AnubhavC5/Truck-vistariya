@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BarChart, Package, Truck, LifeBuoy, CalendarArrowDown, UsersRound, ReceiptIndianRupee, LogIn, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
@@ -26,10 +26,11 @@ const SidebarContent = ({ isLoggedIn, handleLogin, handleLogout }) => {
   const [isAdmin, setisAdmin] = useState(false);
   const highlight = param.split("/").pop();
   const role=useAuthStore((state) => state?.user?.role);
-  if(role==="admin"){
- setisAdmin(true);    
-  }
-
+  useEffect(() => {
+    if (role === "admin") {
+      setisAdmin(true);
+    }
+  }, [role]);
 
   return (
     <>
